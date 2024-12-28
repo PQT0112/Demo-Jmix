@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="MiniProject">
+        <addUniqueConstraint columnNames="UNIVERSITY_ID, PHONE_NUMBER" constraintName="IDX_TEACHER_UNQ"
+                             tableName="TEACHER"/>
+    </changeSet>
+    <changeSet id="2" author="MiniProject">
+        <dropIndex indexName="IDX_TEACHER" tableName="TEACHER"/>
+    </changeSet>
+</databaseChangeLog>

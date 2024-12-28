@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://studentDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="studentDc"
+                  class="com.company.miniproject.entity.Student">
+            <fetchPlan extends="_base">
+                <property name="score" fetchPlan="_base"/>
+                <property name="lophoc" fetchPlan="_base"/>
+                <property name="university" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="studentDl"/>
+            <collection id="scoreDc" property="score"/>
+        </instance>
+        <collection id="lopHocsDc" class="com.company.miniproject.entity.LopHoc">
+            <loader id="lopHocsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from LopHoc e
+                    order by e.name asc  ]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base">
+                <property name="student" fetchPlan="_base"/>
+            </fetchPlan>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="studentDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="codeField" property="code"/>
+            <textField id="nameField" property="name"/>
+            <datePicker id="dateOfBirthField" property="dateOfBirth"/>
+            <textField id="cccdField" property="cccd"/>
+            <textField id="addressField" property="address"/>
+            <textField id="phoneNumberField" property="phoneNumber"/>
+            <entityPicker id="lophocField" property="lophoc">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="universityField" property="university">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+        </formLayout>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button action="scoreDataGrid.create"/>
+            <button action="scoreDataGrid.edit"/>
+            <button action="scoreDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="scoreDataGrid" dataContainer="scoreDc" width="100%" height="100%">
+            <actions>
+                <action id="create" type="list_create">
+
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+
+                <action id="edit" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="subject"/>
+                <column property="mark"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

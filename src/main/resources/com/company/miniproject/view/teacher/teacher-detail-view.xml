@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://teacherDetailView.title"
+      focusComponent="form">
+    <data>
+        <collection id="lopHocsDc" class="com.company.miniproject.entity.LopHoc">
+            <loader id="lopHocsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from LopHoc e
+                    order by e.name asc]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base">
+                <property name="student" fetchPlan="_base"/>
+            </fetchPlan>
+        </collection>
+        <collection id="universitiesDc" class="com.company.miniproject.entity.University">
+            <loader id="universitiesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from University e
+                    order by e.name asc]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base">
+                <property name="clazz" fetchPlan="_base"/>
+            </fetchPlan>
+        </collection>
+        <instance id="teacherDc"
+                  class="com.company.miniproject.entity.Teacher">
+            <fetchPlan extends="_base">
+                <property name="university" fetchPlan="_instance_name"/>
+                <property name="lophoc" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="teacherDl"/>
+            <collection id="lophocDc" property="lophoc"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="teacherDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name"/>
+            <textField id="yearField" property="year"/>
+            <textField id="addressField" property="address"/>
+            <textField id="phoneNumberField" property="phoneNumber"/>
+            <entityComboBox id="universityField" property="university" itemsContainer="universitiesDc"/>
+            <details summaryText="Picture">
+                <hbox>
+                    <fileStorageUploadField id="pictureField" property="picture" dataContainer="teacherDc"/>
+                    <image id="image" property="picture" dataContainer="teacherDc" height="10em" width="10em"
+                           classNames="user-picture"/>
+                </hbox>
+            </details>
+        </formLayout>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button action="lophocDataGrid.create"/>
+            <button action="lophocDataGrid.edit"/>
+            <button action="lophocDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="lophocDataGrid" dataContainer="lophocDc" width="100%" height="100%">
+            <actions>
+                <action id="create" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="edit" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="code"/>
+                <column property="name"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

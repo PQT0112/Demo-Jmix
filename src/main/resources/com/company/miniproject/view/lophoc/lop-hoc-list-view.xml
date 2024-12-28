@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://lopHocListView.title"
+      focusComponent="lopHocsDataGrid">
+    <data>
+        <collection id="lopHocsDc"
+                    class="com.company.miniproject.entity.LopHoc">
+            <fetchPlan extends="_base">
+                <property name="teacher" fetchPlan="_instance_name"/>
+                <property name="university" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="lopHocsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from LopHoc e join e.university u]]>
+                    <condition>
+                        <and>
+                            <or>
+                                <c:jpql>
+                                    <c:where>e.name like :component_nameFilterField</c:where>
+                                </c:jpql>
+                                <c:jpql>
+                                    <c:where>e.code like :component_nameFilterField</c:where>
+                                </c:jpql>
+                                <c:jpql>
+                                    <c:where>u.name like :component_nameFilterField</c:where>
+                                </c:jpql>
+<!--                                <c:jpql>-->
+<!--                                    <c:where>e.teacher like :component_nameFilterField</c:where>-->
+<!--                                </c:jpql>-->
+                            </or>
+                        </and>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <hbox alignItems="END" classNames="flex-wrap">
+            <textField id="nameFilterField"
+                       label="Student filter"
+                       placeholder="Enter student name or phone"
+                       width="15em"
+            />
+            <button id="lopHocsDataGridBtn" action="lopHocsDataGrid.refresh"/>
+        </hbox>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createButton" action="lopHocsDataGrid.create"/>
+            <button id="editButton" action="lopHocsDataGrid.edit"/>
+            <button id="removeButton" action="lopHocsDataGrid.remove"/>
+            <simplePagination id="pagination" dataLoader="lopHocsDl"/>
+        </hbox>
+        <dataGrid id="lopHocsDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="lopHocsDc"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="create" type="list_create"/>
+                <action id="edit" type="list_edit"/>
+                <action id="remove" type="list_remove"/>
+                <action id="refresh" type="list_refresh"/>
+            </actions>
+            <columns resizable="true">
+                <column property="code"/>
+                <column property="name"/>
+                <column property="teacher"/>
+                <column property="university"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectButton" action="selectAction"/>
+            <button id="discardButton" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>
